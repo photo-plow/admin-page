@@ -44,7 +44,7 @@ export default function RootLayout({
       <body>
         <ApolloProvider client={client}>
           <Header isSuperAdminPanel isAuth={true} />
-          <div className="pt-[60px]">{children}</div>
+          <div className="pt-[60px] flex min-h-[calc(100vh-60px)] items-center justify-center">{children}</div>
         </ApolloProvider>
       </body>
     </html>
