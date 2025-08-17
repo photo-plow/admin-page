@@ -1,4 +1,6 @@
 'use client'
+import { setIsAuth } from '@/lib/appSlice'
+import { useAppDispatch } from '@/lib/hooks'
 import { gql, useApolloClient, useMutation } from '@apollo/client'
 import { useRouter } from 'next/navigation'
 import { Button, Card, Input, Typography } from 'photo-flow-ui-kit'
@@ -15,11 +17,19 @@ const LOGIN_ADMIN = gql`
 const Auth = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const dispatch = useAppDispatch()
 
   const [login, { loading, error, data }] = useMutation(LOGIN_ADMIN, {
     fetchPolicy: 'no-cache',
     onCompleted: data => {
-      console.log('loginAdmin result:', data)
+      if (data?.loginAdmin?.logged) {
+        const key = btoa(`${email}:${password}`)
+        localStorage.setItem('AUTH_TOKEN', key)
+        dispatch(setIsAuth({ isAuth: true }))
+        console.log(key)
+        console.log(data)
+        router.push('/usersList')
+      }
     },
     onError: err => {
       console.error('loginAdmin error:', err)
