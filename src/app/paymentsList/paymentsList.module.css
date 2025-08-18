@@ -1,0 +1,24 @@
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.table-fixed-height {
+    border-collapse: collapse;
+}
+.table-fixed-height thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+.table-fixed-height tbody {
+    max-height: 366px;
+    display: block;
+    overflow-y: auto;
+}
+.table-fixed-height thead,
+.table-fixed-height tbody tr {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}

@@ -2,6 +2,16 @@ import Triangle from '@/assets/icons/triangle.svg'
 import { twMerge } from 'tailwind-merge'
 import { SortBy, SortDirection } from '@/lib/types/graphql'
 
+type Props = {
+  title: string
+  sortValue?: SortBy
+  sortBy: SortBy
+  sortDirection: SortDirection | null
+  setSortBy: (value: SortBy) => void
+  setSortDirection: (value: SortDirection) => void
+  setPageNumber: (value: number) => void
+}
+
 const TableHeaders = ({
   title,
   sortBy,
@@ -10,26 +20,15 @@ const TableHeaders = ({
   sortDirection,
   setSortDirection,
   setPageNumber,
-}: {
-  title: string
-  sortValue: SortBy
-  sortBy: SortBy
-  sortDirection: SortDirection | null
-  setSortBy: (value: SortBy) => void
-  setSortDirection: (value: SortDirection) => void
-  setPageNumber: (value: number) => void
-}) => {
+}: Props) => {
+  if (!sortValue) return <>{title}</>
+  const headerHandler = () => {
+    setSortBy(sortValue)
+    setSortDirection(sortDirection === SortDirection.DESC ? SortDirection.ASC : SortDirection.DESC)
+    setPageNumber(1)
+  }
   return (
-    <span
-      onClick={() => {
-        setSortBy(sortValue)
-        setSortDirection(
-          sortDirection === SortDirection.DESC ? SortDirection.ASC : SortDirection.DESC
-        )
-        setPageNumber(1)
-      }}
-      className='flex h-full cursor-pointer items-center gap-[9px]'
-    >
+    <span onClick={headerHandler} className='flex h-full cursor-pointer items-center gap-[9px]'>
       {title}
       <div className='flex flex-col gap-[3px]'>
         <Triangle
