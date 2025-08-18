@@ -27,9 +27,7 @@ const headers = [
 export default function ListUsers() {
   const [pageNumber, setPageNumber] = useState(1)
   const pageSize = 8
-  const [isDelete, setIsDelete] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isEditMode, setIsEditMode] = useState<boolean>(false)
   const [activeUserId, setActiveUserId] = useState<string | null>(null)
 
   const { data, loading, error } = useQuery<GetUsersResponse, GetUsersVariables>(GET_USERS, {
@@ -58,9 +56,9 @@ export default function ListUsers() {
     setActiveUserId(prev => (prev === userId ? null : userId))
   }
 
-  const handlePageChange = (newPage: number) => {
-    setPageNumber(newPage)
-  }
+  // const handlePageChange = (newPage: number) => {
+  //   setPageNumber(newPage)
+  // }
 
   useEffect(() => {
     console.log('Current page:', pageNumber, 'GraphQL response:', data?.getUsers)
