@@ -1,6 +1,6 @@
 'use client'
 import { useAuth } from '@/app/layout'
-import { gql, useApolloClient, useMutation } from '@apollo/client'
+import { gql, useMutation } from '@apollo/client'
 import { useRouter } from 'next/navigation'
 import { Button, Card, Input, Typography, useAlert } from 'photo-flow-ui-kit'
 import { useRef } from 'react'
@@ -27,12 +27,12 @@ const Auth = () => {
         setToken(key)
         router.push('/usersList')
       } else {
-        showAlert({ message: 'Неверный логин или пароль', type: 'error' });
+        showAlert({ message: 'Неверный логин или пароль', type: 'error' })
       }
     },
     onError: err => {
       console.error('loginAdmin error:', err)
-      showAlert({ message: err.message, type: 'error' });
+      showAlert({ message: err.message, type: 'error' })
     },
   })
   const router = useRouter()

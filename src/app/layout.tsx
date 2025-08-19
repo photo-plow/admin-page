@@ -4,11 +4,11 @@ import './globals.css'
 import React, { createContext, useEffect, useMemo, useState } from 'react'
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import { AlertProvider, Header } from 'photo-flow-ui-kit'
+import { AlertProvider, Header, Loader } from 'photo-flow-ui-kit'
 
 export type AuthContextValue = {
   isAuth: boolean
-  setToken: React.Dispatch<React.SetStateAction<string | null>>;
+  setToken: React.Dispatch<React.SetStateAction<string | null>>
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null)
@@ -49,29 +49,36 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const [isAuth, setIsAuth] = useState(false)
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true)
   const [token, setToken] = useState<string | null>(null)
-
   useEffect(() => {
-    setToken(localStorage.getItem('AUTH_TOKEN'))
+    const savedToken = localStorage.getItem('AUTH_TOKEN')
+    setToken(savedToken)
+    setIsCheckingAuth(false)
   }, [])
 
-  const authValue = useMemo(() => ({ setToken, isAuth: !!token  }), [isAuth])
+  const authValue = useMemo(() => ({ setToken, isAuth: !!token }), [token])
+
+
 
   return (
     <html lang='en'>
       <body>
-        <div id="alert-root" />
-        <AuthContext.Provider value={authValue}>
-        <AlertProvider>
-          <ApolloProvider client={client}>
-            <Header isAuth={!!token} />
-            <div className='flex min-h-[calc(100vh-60px)] items-center justify-center pt-[60px]'>
-              {children}
-            </div>
-          </ApolloProvider>
-        </AlertProvider>
-        </AuthContext.Provider>
+        <div id='alert-root' />
+        {isCheckingAuth ? (
+          <Loader />
+        ) : (
+          <AuthContext.Provider value={authValue}>
+            <AlertProvider>
+              <ApolloProvider client={client}>
+                <Header isAuth={!!token} />
+                <div className='flex min-h-[calc(100vh-60px)] items-center justify-center pt-[60px]'>
+                  {children}
+                </div>
+              </ApolloProvider>
+            </AlertProvider>
+          </AuthContext.Provider>
+        )}
       </body>
     </html>
   )
