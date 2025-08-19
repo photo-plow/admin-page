@@ -4,7 +4,7 @@ import './globals.css'
 import React, { createContext, useEffect, useMemo, useState } from 'react'
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import { Header } from 'photo-flow-ui-kit'
+import { AlertProvider, Header } from 'photo-flow-ui-kit'
 
 export type AuthContextValue = {
   isAuth: boolean
@@ -61,13 +61,16 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body>
+        <div id="alert-root" />
         <AuthContext.Provider value={authValue}>
+        <AlertProvider>
           <ApolloProvider client={client}>
             <Header isAuth={!!token} />
             <div className='flex min-h-[calc(100vh-60px)] items-center justify-center pt-[60px]'>
               {children}
             </div>
           </ApolloProvider>
+        </AlertProvider>
         </AuthContext.Provider>
       </body>
     </html>
