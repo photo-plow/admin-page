@@ -1,17 +1,10 @@
 'use client'
-import { useAuth } from '@/app/layout'
-import { gql, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { useRouter } from 'next/navigation'
 import { Button, Card, Input, Typography, useAlert } from 'photo-flow-ui-kit'
 import { useRef } from 'react'
-
-const LOGIN_ADMIN = gql`
-  mutation loginAd($email: String!, $password: String!) {
-    loginAdmin(email: $email, password: $password) {
-      logged
-    }
-  }
-`
+import { useAuth } from '../../../lib/utils/auth/feature/authContext'
+import { LOGIN_ADMIN } from '@/lib/utils/auth/api/authApi'
 
 const Auth = () => {
   const emailRef = useRef<HTMLInputElement | null>(null)
@@ -22,7 +15,9 @@ const Auth = () => {
     fetchPolicy: 'no-cache',
     onCompleted: data => {
       if (data?.loginAdmin?.logged) {
-        const key = btoa(`${emailRef.current}:${passwordRef.current}`)
+        const email = emailRef.current?.value || ''
+        const password = passwordRef.current?.value || ''
+        const key = btoa(`${email}:${password}`)
         localStorage.setItem('AUTH_TOKEN', key)
         setToken(key)
         router.push('/usersList')
