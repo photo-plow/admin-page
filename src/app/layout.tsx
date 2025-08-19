@@ -1,14 +1,23 @@
 'use client'
 
 import './globals.css'
-import React from 'react'
+import React, { createContext, useEffect, useMemo, useState } from 'react'
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { Header } from 'photo-flow-ui-kit'
-import { Provider } from 'react-redux'
-import { store } from '@/lib/store'
-import { useAppSelector } from '@/lib/hooks'
-import { selectIsAuth } from '@/lib/appSlice'
+
+export type AuthContextValue = {
+  isAuth: boolean
+  setToken: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+export const AuthContext = createContext<AuthContextValue | null>(null)
+
+export const useAuth = () => {
+  const ctx = React.useContext(AuthContext)
+  if (!ctx) throw new Error('useAuth must be used within <AuthContext.Provider>')
+  return ctx
+}
 
 const httpLink = createHttpLink({
   uri: 'https://inctagram.work/api/v1/graphql',
@@ -35,27 +44,31 @@ const client = new ApolloClient({
   },
 })
 
-export function HeaderContainer() {
-  const isAuth = useAppSelector(selectIsAuth)
-  return <Header isSuperAdminPanel isAuth={isAuth} />
-}
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const [isAuth, setIsAuth] = useState(false)
+  const [token, setToken] = useState<string | null>(null)
+
+  useEffect(() => {
+    setToken(localStorage.getItem('AUTH_TOKEN'))
+  }, [])
+
+  const authValue = useMemo(() => ({ setToken, isAuth: !!token  }), [isAuth])
+
   return (
     <html lang='en'>
       <body>
-        <Provider store={store}>
+        <AuthContext.Provider value={authValue}>
           <ApolloProvider client={client}>
-            <HeaderContainer />
+            <Header isAuth={!!token} />
             <div className='flex min-h-[calc(100vh-60px)] items-center justify-center pt-[60px]'>
               {children}
             </div>
           </ApolloProvider>
-        </Provider>
+        </AuthContext.Provider>
       </body>
     </html>
   )

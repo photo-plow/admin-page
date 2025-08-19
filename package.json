@@ -12,13 +12,11 @@
   "dependencies": {
     "@apollo/client": "^3.13.9",
     "@fontsource-variable/inter": "^5.2.6",
-    "@reduxjs/toolkit": "^2.8.2",
     "graphql": "^16.11.0",
     "next": "15.4.6",
     "photo-flow-ui-kit": "^1.0.19",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-redux": "^9.2.0",
     "tailwind-merge": "^3.3.0"
   },
   "devDependencies": {

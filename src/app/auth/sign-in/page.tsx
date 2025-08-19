@@ -1,6 +1,5 @@
 'use client'
-import { setIsAuth } from '@/lib/appSlice'
-import { useAppDispatch } from '@/lib/hooks'
+import { useAuth } from '@/app/layout'
 import { gql, useApolloClient, useMutation } from '@apollo/client'
 import { useRouter } from 'next/navigation'
 import { Button, Card, Input, Typography } from 'photo-flow-ui-kit'
@@ -15,9 +14,8 @@ const LOGIN_ADMIN = gql`
 `
 
 const Auth = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const dispatch = useAppDispatch()
+  const [email, setEmail] = useState('') //change to ref(rerender)
+  const [password, setPassword] = useState('') //change to ref(rerender)
 
   const [login, { loading, error, data }] = useMutation(LOGIN_ADMIN, {
     fetchPolicy: 'no-cache',
@@ -25,9 +23,7 @@ const Auth = () => {
       if (data?.loginAdmin?.logged) {
         const key = btoa(`${email}:${password}`)
         localStorage.setItem('AUTH_TOKEN', key)
-        dispatch(setIsAuth({ isAuth: true }))
-        console.log(key)
-        console.log(data)
+        setToken(key)
         router.push('/usersList')
       }
     },
@@ -37,6 +33,8 @@ const Auth = () => {
   })
   const apollo = useApolloClient()
   const router = useRouter()
+
+  const { isAuth, setToken } = useAuth()
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault()
