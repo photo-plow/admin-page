@@ -69,7 +69,7 @@ export default function ListUsers() {
   if (error) return <div>Error: {error.message}</div>
 
   return (
-    <>
+    <div className='w-[1060px]'>
       <table onClick={() => setActiveUserId(null)} ref={tableRef} className={'w-full'}>
         <thead className={'h-[48px] gap-[72px]'}>
           <tr className='bg-dark-500 h-[48px] text-left'>
@@ -90,8 +90,8 @@ export default function ListUsers() {
         <tbody>
           {users.map(el => (
             <tr key={el.id} className={'border-dark-500 text-regular-14 h-[49px] border'}>
-              <td className={'flex py-[11px] pl-[60px]'}>
-                {el.userBan && <BanIcon className={'absolute left-68 h-[24px] w-[24px]'} />}
+              <td className={'flex py-[11px] pl-[60px] gap-3'}>
+                {el.userBan && <BanIcon className={'h-[24px] w-[24px] ml-[-36px]'} />}
                 {el.id}
               </td>
               <td className={'py-[12px] pl-[24px]'}>
@@ -136,6 +136,6 @@ export default function ListUsers() {
         />
       </div>
       <ModalWindow open={isModalOpen} onClose={() => setIsModalOpen(false)} />
-    </>
+    </div>
   )
 }
