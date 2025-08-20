@@ -10,7 +10,6 @@ import HeaderWrapper from '@/lib/utils/auth/ui/HeaderWrapper'
 
 const httpLink = createHttpLink({
   uri: 'https://inctagram.work/api/v1/graphql',
-  credentials: 'include',
 })
 
 const client = new ApolloClient({
