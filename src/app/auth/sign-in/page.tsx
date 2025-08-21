@@ -1,0 +1,72 @@
+'use client'
+import { useMutation } from '@apollo/client'
+import { useRouter } from 'next/navigation'
+import { Button, Card, Input, Typography, useAlert } from 'photo-flow-ui-kit'
+import { useRef } from 'react'
+import { useAuth } from '../../../lib/utils/auth/feature/authContext'
+import { LOGIN_ADMIN } from '@/lib/utils/auth/api/authApi'
+
+const Auth = () => {
+  const emailRef = useRef<HTMLInputElement | null>(null)
+  const passwordRef = useRef<HTMLInputElement | null>(null)
+  const { showAlert } = useAlert()!
+
+  const [login, { loading, error, data }] = useMutation(LOGIN_ADMIN, {
+    fetchPolicy: 'no-cache',
+    onCompleted: data => {
+      if (data?.loginAdmin?.logged) {
+        const email = emailRef.current?.value || ''
+        const password = passwordRef.current?.value || ''
+        const key = btoa(`${email}:${password}`)
+        localStorage.setItem('AUTH_TOKEN', key)
+        setToken(key)
+        router.push('/usersList')
+      } else {
+        showAlert({ message: 'Неверный логин или пароль', type: 'error' })
+      }
+    },
+    onError: err => {
+      console.error('loginAdmin error:', err)
+      showAlert({ message: err.message, type: 'error' })
+    },
+  })
+  const router = useRouter()
+
+  const { isAuth, setToken } = useAuth()
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const email = emailRef.current?.value || ''
+    const password = passwordRef.current?.value || ''
+    login({ variables: { email, password } })
+  }
+
+  return (
+    <Card className={`w-[380px] p-6 pb-9`}>
+      <Typography variant={'h1'} className={'mb-9 text-center'}>
+        Sign In
+      </Typography>
+      <form onSubmit={onSubmit}>
+        <Input
+          ref={emailRef}
+          label='Email'
+          type='email'
+          placeholder='Epam@epam.com'
+          className='mb-6'
+        />
+        <Input
+          ref={passwordRef}
+          label='Password'
+          type='password'
+          placeholder='*********'
+          className='mb-9'
+        />
+        <Button type='submit' className='w-full'>
+          Sign In
+        </Button>
+      </form>
+    </Card>
+  )
+}
+
+export default Auth
