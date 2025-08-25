@@ -26,10 +26,12 @@ export default function ListUsers() {
   const pageSize = 8
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [activeUserId, setActiveUserId] = useState<string | null>(null)
-  const [sortedValue, setSortedValue] = useState<'All' | 'Blocked' | 'Not Blocked'>('All')
+  const [filteredValue, setFilteredValue] = useState<'All' | 'Blocked' | 'Not Blocked'>('All')
+  const [search, setSearch] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
 
   const statusFilter =
-    sortedValue === 'Blocked' ? 'BLOCKED' : sortedValue === 'Not Blocked' ? 'UNBLOCKED' : 'ALL'
+    filteredValue === 'Blocked' ? 'BLOCKED' : filteredValue === 'Not Blocked' ? 'UNBLOCKED' : 'ALL'
 
   const { data, loading, error } = useQuery<GetUsersResponse, GetUsersVariables>(GET_USERS, {
     variables: {
@@ -38,6 +40,7 @@ export default function ListUsers() {
       sortBy: 'createdAt',
       sortDirection: 'desc',
       statusFilter,
+      searchTerm: debouncedSearch,
     },
     fetchPolicy: 'cache-and-network', // Для актуальных данных
   })
@@ -54,6 +57,16 @@ export default function ListUsers() {
     document.addEventListener('click', handleClickOutside)
     return () => document.removeEventListener('click', handleClickOutside)
   }, [])
+
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedSearch(() => search), 500)
+    console.log(debouncedSearch)
+    return () => clearTimeout(id)
+  }, [search])
+
+  useEffect(() => {
+    setPageNumber(1)
+  }, [filteredValue, debouncedSearch])
 
   const toggleMenu = (userId: string, e: React.MouseEvent) => {
     e.stopPropagation()
@@ -72,8 +85,10 @@ export default function ListUsers() {
   return (
     <div className='w-[1060px] pt-[60px]'>
       <MenuConfig
-        sortedValue={sortedValue}
-        setSortedValue={(v: 'All' | 'Blocked' | 'Not Blocked') => setSortedValue(v)}
+        filteredValue={filteredValue}
+        setFilteredValue={v => setFilteredValue(v)}
+        searchValue={search}
+        setSearch={setSearch}
       />
 
       <table onClick={() => setActiveUserId(null)} ref={tableRef} className={'w-full'}>

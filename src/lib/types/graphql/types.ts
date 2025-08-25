@@ -64,6 +64,7 @@ export interface GetUsersVariables {
   sortBy: string
   sortDirection: string
   statusFilter: string
+  searchTerm: string | undefined
 }
 export interface RemoveUser {
   userId: number
