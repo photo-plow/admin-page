@@ -1,6 +1,6 @@
 'use client'
 
-import { Select } from 'photo-flow-ui-kit'
+import { Input, Select } from 'photo-flow-ui-kit'
 
 const sortItems = [{ title: 'All' }, { title: 'Blocked' }, { title: 'Not Blocked' }]
 
@@ -11,12 +11,14 @@ type MenuConfigProps = {
 
 export const MenuConfig = ({ sortedValue, setSortedValue }: MenuConfigProps) => {
   return (
-    <div>
+    <div className='flex w-full gap-15 justify-between items-center mb-6'>
+      <Input type='search' placeholder='Search' className='max-w-[644px] w-full'/>
       <Select
         items={sortItems}
         placeholder='all'
         value={sortedValue}
         onValueChange={(e: 'All' | 'Blocked' | 'Not Blocked') => setSortedValue(e)}
+        className='w-[234px]'
       />
     </div>
   )
