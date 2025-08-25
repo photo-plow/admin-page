@@ -4,13 +4,14 @@ import Dots from '@/assets/icons/more-horizontal.svg'
 import BanIcon from '@/assets/icons/ban.svg'
 import FilterIcon from '@/assets/icons/filter.svg'
 import { useQuery } from '@apollo/client'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { GET_USERS } from '@/lib/feature/usersList/api/adminApi'
 import { GetUsersResponse, GetUsersVariables } from '@/lib/types/graphql'
 import UserMenu from '@/lib/feature/usersList/ui/UserMenu'
-import { ModalWindow, Pagination, Select } from 'photo-flow-ui-kit'
+import { ModalWindow, Pagination } from 'photo-flow-ui-kit'
 import { formatDateToDotFormat } from '@/utils'
+import { MenuConfig } from '@/lib/feature/usersList/ui/MenuConfig'
 
 const headers = [
   { title: 'User ID' },
@@ -19,8 +20,6 @@ const headers = [
   { title: 'Date added', icon: <FilterIcon className='mx-auto' /> },
   { title: '' },
 ]
-
-const sortItems = [{ title: 'All' }, { title: 'Blocked' }, { title: 'Not Blocked' }]
 
 export default function ListUsers() {
   const [pageNumber, setPageNumber] = useState(1)
@@ -38,12 +37,10 @@ export default function ListUsers() {
       pageNumber,
       sortBy: 'createdAt',
       sortDirection: 'desc',
-      statusFilter, 
+      statusFilter,
     },
     fetchPolicy: 'cache-and-network', // Для актуальных данных
   })
-
-  console.log(data)
 
   const tableRef = useRef<HTMLTableElement>(null)
 
@@ -67,29 +64,16 @@ export default function ListUsers() {
     setPageNumber(newPage)
   }
 
-  useEffect(() => {
-    console.log('Current page:', pageNumber, 'GraphQL response:', data?.getUsers)
-  }, [data, pageNumber])
-
   const users = data?.getUsers.users || []
-
-  // const sortedUsers = useMemo(() => {
-  //   if (sortedValue === 'Blocked') return users.filter(u => !!u.userBan)
-  //   if (sortedValue === 'Not Blocked') return users.filter(u => !u.userBan)
-
-  //   return users
-  // }, [sortedValue, users])
 
   if (loading) return <div>Loading...</div>
   if (error) return <div>Error: {error.message}</div>
 
   return (
     <div className='w-[1060px]'>
-      <Select
-        items={sortItems}
-        placeholder='all'
-        value={sortedValue}
-        onValueChange={e => setSortedValue(e)}
+      <MenuConfig
+        sortedValue={sortedValue}
+        setSortedValue={(v: 'All' | 'Blocked' | 'Not Blocked') => setSortedValue(v)}
       />
 
       <table onClick={() => setActiveUserId(null)} ref={tableRef} className={'w-full'}>
