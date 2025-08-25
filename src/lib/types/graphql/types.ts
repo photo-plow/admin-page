@@ -61,6 +61,9 @@ export interface GetUsersResponse {
 export interface GetUsersVariables {
   pageSize?: number
   pageNumber?: number
+  sortBy: string
+  sortDirection: string
+  statusFilter: string
 }
 export interface RemoveUser {
   userId: number
