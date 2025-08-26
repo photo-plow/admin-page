@@ -3,21 +3,27 @@
 import Dots from '@/assets/icons/more-horizontal.svg'
 import BanIcon from '@/assets/icons/ban.svg'
 import FilterIcon from '@/assets/icons/filter.svg'
+import FilterActiveIcon from '@/assets/icons/filter-active.svg'
 import { useQuery } from '@apollo/client'
 import { useEffect, useRef, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { GET_USERS } from '@/lib/feature/usersList/api/adminApi'
-import { GetUsersResponse, GetUsersVariables } from '@/lib/types/graphql'
+import { GET_USERS } from '@/lib/feature/usersList/api/getUsers'
+import { GetUsersResponse, GetUsersVariables, SortBy } from '@/lib/types/graphql'
 import UserMenu from '@/lib/feature/usersList/ui/UserMenu'
-import { ModalWindow, Pagination } from 'photo-flow-ui-kit'
+import { Loader, ModalWindow, Pagination } from 'photo-flow-ui-kit'
 import { formatDateToDotFormat } from '@/utils'
 import { MenuConfig } from '@/lib/feature/usersList/ui/MenuConfig'
 
-const headers = [
+type Header = {
+  title: string
+  sortByTitle?: SortBy
+}
+
+const headers: Header[] = [
   { title: 'User ID' },
-  { title: 'Username', icon: <FilterIcon className='mx-auto' /> }, // Без иконки
-  { title: 'Profile link' },
-  { title: 'Date added', icon: <FilterIcon className='mx-auto' /> },
+  { title: 'Username' },
+  { title: 'Profile link', sortByTitle: 'userName' },
+  { title: 'Date added', sortByTitle: 'createdAt' },
   { title: '' },
 ]
 
@@ -29,6 +35,8 @@ export default function ListUsers() {
   const [filteredValue, setFilteredValue] = useState<'All' | 'Blocked' | 'Not Blocked'>('All')
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
+  const [sortBy, setSortBy] = useState<SortBy>('createdAt')
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
 
   const statusFilter =
     filteredValue === 'Blocked' ? 'BLOCKED' : filteredValue === 'Not Blocked' ? 'UNBLOCKED' : 'ALL'
@@ -37,12 +45,12 @@ export default function ListUsers() {
     variables: {
       pageSize,
       pageNumber,
-      sortBy: 'createdAt',
-      sortDirection: 'desc',
+      sortBy: sortBy,
+      sortDirection: sortDirection,
       statusFilter,
       searchTerm: debouncedSearch,
     },
-    fetchPolicy: 'cache-and-network', // Для актуальных данных
+    fetchPolicy: 'cache-and-network',
   })
 
   const tableRef = useRef<HTMLTableElement>(null)
@@ -60,7 +68,6 @@ export default function ListUsers() {
 
   useEffect(() => {
     const id = setTimeout(() => setDebouncedSearch(() => search), 500)
-    console.log(debouncedSearch)
     return () => clearTimeout(id)
   }, [search])
 
@@ -77,9 +84,21 @@ export default function ListUsers() {
     setPageNumber(newPage)
   }
 
+  const onSort = (item: { title: string; sortByTitle?: SortBy }) => {
+    if (!item.sortByTitle) return
+    if (item.sortByTitle === sortBy) {
+      if (sortDirection === 'asc') {
+        setSortDirection('desc')
+      } else {
+        setSortDirection('asc')
+      }
+    }
+    setSortBy(item.sortByTitle)
+  }
+
   const users = data?.getUsers.users || []
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return <Loader />
   if (error) return <div>Error: {error.message}</div>
 
   return (
@@ -92,18 +111,32 @@ export default function ListUsers() {
       />
 
       <table onClick={() => setActiveUserId(null)} ref={tableRef} className={'w-full'}>
-        <thead className={'h-[48px] gap-[72px]'}>
+        <thead>
           <tr className='bg-dark-500 h-[48px] text-left'>
             {headers.map((header, index) => (
               <th
+                onClick={() => onSort(header)}
                 key={index}
-                className={twMerge(
-                  'text-bold-14 items-center py-[12px] pl-[24px]',
-                  header.icon && 'flex items-center'
-                )}
+                className={'text-bold-14 items-center py-[12px] pl-[24px]'}
               >
-                {header.title}
-                {header.icon && <div className='ml-1'>{header.icon}</div>}
+                <div
+                  className={twMerge(
+                    'inline-flex items-center',
+                    header.sortByTitle && 'cursor-pointer',
+                    'whitespace-nowrap'
+                  )}
+                >
+                  <span>{header.title}</span>
+                  {header.sortByTitle && (
+                    <div className='ml-1'>
+                      {header.sortByTitle === sortBy ? (
+                        <FilterActiveIcon className='w-2.5' />
+                      ) : (
+                        <FilterIcon />
+                      )}
+                    </div>
+                  )}
+                </div>
               </th>
             ))}
           </tr>
@@ -148,12 +181,7 @@ export default function ListUsers() {
           currentPage={pageNumber}
           itemsPerPage={pageSize}
           totalCount={data?.getUsers.pagination.totalCount || 0}
-          // pageSize={data?.getUsers.pagination.pagesCount || 1}
           onChangePagination={handlePageChange}
-          // onChangePageSize={size => {
-          //   setPageSize(size)
-          //   setPageNumber(1)
-          // }}
         />
       </div>
       <ModalWindow open={isModalOpen} onClose={() => setIsModalOpen(false)} />

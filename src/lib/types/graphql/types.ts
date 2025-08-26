@@ -69,15 +69,3 @@ export interface GetUsersVariables {
 export interface RemoveUser {
   userId: number
 }
-// type GetUsersResponse = {
-//   users: Array<{
-//     id: number
-//     createAt: string
-//     userName: string
-//     profile: Array<{ firstName: String; lastName: String }>
-//   }>
-//   pagesCount: number
-//   page: number
-//   pageSize: number
-//   totalCount: number
-// }
