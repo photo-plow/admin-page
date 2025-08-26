@@ -5,5 +5,5 @@ import { useAuth } from '../feature/authContext'
 
 export default function HeaderWrapper() {
   const { isAuth } = useAuth()
-  return <Header isAuth={isAuth} />
+  return <Header isAuth={isAuth} isSuperAdminPanel/>
 }
