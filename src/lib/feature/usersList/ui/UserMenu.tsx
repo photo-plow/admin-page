@@ -4,12 +4,10 @@ import AccountRemove from '@/assets/icons/accountRemove.svg'
 import BanIcon from '@/assets/icons/ban.svg'
 import Dots from '@/assets/icons/more-horizontal.svg'
 import { Button, Typography } from 'photo-flow-ui-kit'
-import ConfirmModal from '@/lib/feature/usersList/ui/removeUser/ConfirmModal'
 
 type PostMenuProps = {
   onCloseMenu: () => void
   isUser?: boolean
-
   openDeleteModal: () => void
 }
 
