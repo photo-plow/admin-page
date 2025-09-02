@@ -4,22 +4,16 @@ import AccountRemove from '@/assets/icons/accountRemove.svg'
 import BanIcon from '@/assets/icons/ban.svg'
 import Dots from '@/assets/icons/more-horizontal.svg'
 import { Button, Typography } from 'photo-flow-ui-kit'
+import ConfirmModal from '@/lib/feature/usersList/ui/removeUser/ConfirmModal'
 
 type PostMenuProps = {
-  setActiveUserId: (value: string | null) => void
-  onEditHandler?: () => void
   onCloseMenu: () => void
   isUser?: boolean
-  setIsModalOpen: (value: boolean) => void
+
+  openDeleteModal: () => void
 }
 
-function UserMenu({
-  onEditHandler,
-  onCloseMenu,
-  isUser,
-  setActiveUserId,
-  setIsModalOpen,
-}: PostMenuProps) {
+function UserMenu({ onCloseMenu, openDeleteModal }: PostMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
   return (
     <div
@@ -31,7 +25,7 @@ function UserMenu({
           className='text-light-100 hover:text-light-100 mb-3 p-0'
           onClick={() => {
             onCloseMenu()
-            setIsModalOpen(true)
+            openDeleteModal()
           }}
           variant='text'
         >

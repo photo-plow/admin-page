@@ -13,6 +13,7 @@ import UserMenu from '@/lib/feature/usersList/ui/UserMenu'
 import { Loader, ModalWindow, Pagination } from 'photo-flow-ui-kit'
 import { formatDateToDotFormat } from '@/utils'
 import { MenuConfig } from '@/lib/feature/usersList/ui/MenuConfig'
+import ConfirmModal from '@/lib/feature/usersList/ui/removeUser/ConfirmModal'
 
 type Header = {
   title: string
@@ -31,16 +32,18 @@ export default function ListUsers() {
   const [pageNumber, setPageNumber] = useState(1)
   const pageSize = 8
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [activeUserId, setActiveUserId] = useState<string | null>(null)
+  const [activeUserId, setActiveUserId] = useState<number | string | null>(null)
   const [filteredValue, setFilteredValue] = useState<'All' | 'Blocked' | 'Not Blocked'>('All')
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const [sortBy, setSortBy] = useState<SortBy>('createdAt')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null)
 
   const statusFilter =
     filteredValue === 'Blocked' ? 'BLOCKED' : filteredValue === 'Not Blocked' ? 'UNBLOCKED' : 'ALL'
 
+  console.log(activeUserId)
   const { data, loading, error } = useQuery<GetUsersResponse, GetUsersVariables>(GET_USERS, {
     variables: {
       pageSize,
@@ -110,7 +113,7 @@ export default function ListUsers() {
         setSearch={setSearch}
       />
 
-      <table onClick={() => setActiveUserId(null)} ref={tableRef} className={'w-full'}>
+      <table onClick={() => setActiveUserId(-1)} ref={tableRef} className={'w-full'}>
         <thead>
           <tr className='bg-dark-500 h-[48px] text-left'>
             {headers.map((header, index) => (
@@ -163,10 +166,12 @@ export default function ListUsers() {
                   {activeUserId === el.id && (
                     <div className='absolute top-10 right-6 z-50'>
                       <UserMenu
-                        setActiveUserId={setActiveUserId}
                         isUser={true}
                         onCloseMenu={() => setActiveUserId(null)}
-                        setIsModalOpen={setIsModalOpen}
+                        openDeleteModal={() => {
+                          setSelectedUserId(Number(el.id))
+                          setIsModalOpen(true)
+                        }}
                       />
                     </div>
                   )}
@@ -184,7 +189,17 @@ export default function ListUsers() {
           onChangePagination={handlePageChange}
         />
       </div>
-      <ModalWindow open={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      {/*<ModalWindow open={isModalOpen} onClose={() => setIsModalOpen(false)} />*/}
+      {
+        <ConfirmModal
+          open={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          userId={Number(selectedUserId)}
+          type='delete'
+          confirmText='Are you sure you want to delete this user?'
+        />
+      }
     </div>
   )
 }
