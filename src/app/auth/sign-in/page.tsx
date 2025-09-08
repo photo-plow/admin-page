@@ -42,7 +42,9 @@ const Auth = () => {
   }
 
   return (
-    <Card className={`w-[380px] p-6 pb-9`}>
+    <Card
+      className={`absolute top-[50%] left-[50%] w-[380px] translate-x-[-50%] translate-y-[-50%] p-6 pb-9`}
+    >
       <Typography variant={'h1'} className={'mb-9 text-center'}>
         Sign In
       </Typography>

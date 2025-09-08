@@ -35,9 +35,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <ApolloProvider client={client}>
               <HeaderWrapper />
               <SidebarWrapper />
-              <div className='flex min-h-[calc(100vh-60px)] items-center justify-center pt-[60px]'>
-                {children}
-              </div>
+              <div className='min-h-[calc(100vh-60px)] pt-[60px] pl-[244px]'>{children}</div>
             </ApolloProvider>
           </AlertProvider>
         </AuthProvider>
