@@ -74,7 +74,7 @@ const PaymentsList = () => {
   if (error || !data) {
     return (
       <div className='text-center'>
-        <h1>Ooops... reload page please.</h1>
+        <Loader />
       </div>
     )
   }
