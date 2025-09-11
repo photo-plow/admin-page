@@ -71,7 +71,7 @@ const PaymentsList = () => {
     },
   })
 
-  if (error) {
+  if (error || !data) {
     return (
       <div className='text-center'>
         <h1>Ooops... reload page please.</h1>
@@ -96,7 +96,7 @@ const PaymentsList = () => {
   }
 
   return (
-    <div className={twMerge('flex h-[624px] flex-col')}>
+    <div className={twMerge('flex h-[624px] flex-col pt-[60px]')}>
       <Input
         ref={inputRef}
         type='search'
