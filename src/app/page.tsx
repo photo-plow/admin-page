@@ -1,11 +1,18 @@
-"use client";
-import { Typography } from "photo-flow-ui-kit";
-import "./globals.css";
+'use client'
+import './globals.css'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { useAuth } from '@/lib/utils/auth/feature/authContext'
 
 export default function Home() {
-  return (
-    <div>
-      <Typography variant={"bold_text_14"}>App page</Typography>
-    </div>
-  );
+  const { isAuth } = useAuth()
+
+  const router = useRouter()
+  useEffect(() => {
+    console.log(isAuth)
+    if (isAuth) return router.push('/usersList')
+    return router.push('/auth/sign-in')
+  }, [isAuth, router])
+
+  return <></>
 }
