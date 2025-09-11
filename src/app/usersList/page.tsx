@@ -10,9 +10,10 @@ import { twMerge } from 'tailwind-merge'
 import { GET_USERS } from '@/lib/feature/usersList/api/getUsers'
 import { GetUsersResponse, GetUsersVariables, SortBy } from '@/lib/types/graphql'
 import UserMenu from '@/lib/feature/usersList/ui/UserMenu'
-import { Loader, ModalWindow, Pagination } from 'photo-flow-ui-kit'
+import { Loader, Pagination } from 'photo-flow-ui-kit'
 import { formatDateToDotFormat } from '@/utils'
 import { MenuConfig } from '@/lib/feature/usersList/ui/MenuConfig'
+import ConfirmModal from '@/lib/feature/usersList/ui/removeUser/ConfirmModal'
 
 type Header = {
   title: string
@@ -31,12 +32,13 @@ export default function ListUsers() {
   const [pageNumber, setPageNumber] = useState(1)
   const pageSize = 8
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [activeUserId, setActiveUserId] = useState<string | null>(null)
+  const [activeUserId, setActiveUserId] = useState<number | string | null>(null)
   const [filteredValue, setFilteredValue] = useState<'All' | 'Blocked' | 'Not Blocked'>('All')
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const [sortBy, setSortBy] = useState<SortBy>('createdAt')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null)
 
   const statusFilter =
     filteredValue === 'Blocked' ? 'BLOCKED' : filteredValue === 'Not Blocked' ? 'UNBLOCKED' : 'ALL'
@@ -102,7 +104,7 @@ export default function ListUsers() {
   if (error) return <div>Error: {error.message}</div>
 
   return (
-    <div className='w-[1060px] pt-[60px]'>
+    <div className='w-[972px] pt-[60px]'>
       <MenuConfig
         filteredValue={filteredValue}
         setFilteredValue={v => setFilteredValue(v)}
@@ -110,7 +112,7 @@ export default function ListUsers() {
         setSearch={setSearch}
       />
 
-      <table onClick={() => setActiveUserId(null)} ref={tableRef} className={'w-full'}>
+      <table onClick={() => setActiveUserId(-1)} ref={tableRef} className={'w-full'}>
         <thead>
           <tr className='bg-dark-500 h-[48px] text-left'>
             {headers.map((header, index) => (
@@ -163,10 +165,12 @@ export default function ListUsers() {
                   {activeUserId === el.id && (
                     <div className='absolute top-10 right-6 z-50'>
                       <UserMenu
-                        setActiveUserId={setActiveUserId}
                         isUser={true}
                         onCloseMenu={() => setActiveUserId(null)}
-                        setIsModalOpen={setIsModalOpen}
+                        openDeleteModal={() => {
+                          setSelectedUserId(Number(el.id))
+                          setIsModalOpen(true)
+                        }}
                       />
                     </div>
                   )}
@@ -184,7 +188,17 @@ export default function ListUsers() {
           onChangePagination={handlePageChange}
         />
       </div>
-      <ModalWindow open={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      {/*<ModalWindow open={isModalOpen} onClose={() => setIsModalOpen(false)} />*/}
+      {
+        <ConfirmModal
+          open={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          userId={Number(selectedUserId)}
+          type='delete'
+          confirmText='Are you sure you want to delete this user?'
+        />
+      }
     </div>
   )
 }
