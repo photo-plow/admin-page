@@ -43,7 +43,6 @@ export default function ListUsers() {
   const statusFilter =
     filteredValue === 'Blocked' ? 'BLOCKED' : filteredValue === 'Not Blocked' ? 'UNBLOCKED' : 'ALL'
 
-  console.log(activeUserId)
   const { data, loading, error } = useQuery<GetUsersResponse, GetUsersVariables>(GET_USERS, {
     variables: {
       pageSize,
@@ -105,7 +104,7 @@ export default function ListUsers() {
   if (error) return <div>Error: {error.message}</div>
 
   return (
-    <div className='w-[1060px] pt-[60px]'>
+    <div className='w-[972px] pt-[60px]'>
       <MenuConfig
         filteredValue={filteredValue}
         setFilteredValue={v => setFilteredValue(v)}

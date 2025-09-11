@@ -36,11 +36,6 @@ function ConfirmModal({
       const { data } = await removeUser({
         variables: { userId },
       })
-      if (data?.removeUser) {
-        console.log('Пользователь успешно удалён')
-      } else {
-        console.error('Не удалось удалить пользователя')
-      }
     } catch (error) {
       console.error('The post has not been found', error)
     } finally {
@@ -49,7 +44,7 @@ function ConfirmModal({
   }
   return (
     <ModalWindow
-      modalTitle={type === 'delete' ? 'Delete Post' : 'Close Post'}
+      modalTitle={type === 'delete' ? 'Delete user' : ''}
       open={open}
       className={twMerge('h-[216px] w-[378px]', className)}
       onClose={onClose}
