@@ -33,7 +33,7 @@ function ConfirmModal({
   const postRemoveHandler = async () => {
     setIsModalOpen(true)
     try {
-      const { data } = await removeUser({
+      await removeUser({
         variables: { userId },
       })
     } catch (error) {
