@@ -4,29 +4,17 @@ import AccountRemove from '@/assets/icons/accountRemove.svg'
 import BanIcon from '@/assets/icons/ban.svg'
 import Dots from '@/assets/icons/more-horizontal.svg'
 import { Button, Typography } from 'photo-flow-ui-kit'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 type PostMenuProps = {
-  setActiveUserId: (value: string | null) => void
-  onEditHandler?: () => void
   onCloseMenu: () => void
   isUser?: boolean
-  setIsModalOpen: (value: boolean) => void
+  openDeleteModal: () => void
   userId: string
 }
 
-function UserMenu({
-  onEditHandler,
-  onCloseMenu,
-  isUser,
-  setActiveUserId,
-  setIsModalOpen,
-  userId,
-}: PostMenuProps) {
+function UserMenu({ onCloseMenu, openDeleteModal, userId }: PostMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
-
-  const router = useRouter()
-
   return (
     <div
       ref={menuRef}
@@ -37,7 +25,7 @@ function UserMenu({
           className='text-light-100 hover:text-light-100 mb-3 p-0'
           onClick={() => {
             onCloseMenu()
-            setIsModalOpen(true)
+            openDeleteModal()
           }}
           variant='text'
         >
@@ -56,17 +44,11 @@ function UserMenu({
             Ban in the system
           </Typography>
         </Button>
-        <Button
-          className={'mb-3 p-0'}
-          onClick={() => {
-            alert(`Is isn't your post!`)
-          }}
-          variant={'text'}
-        >
+        <Button className={'mb-3 p-0'} variant={'text'}>
           <Dots className={'fill-light-100 mr-3 h-6 w-5'} />
-          <Typography className={'text-light-100'} variant={'regular_text_14'}>
+          <Link href={`/usersList/${userId}`} className={'text-light-100 text-regular-14'}>
             More Information
-          </Typography>
+          </Link>
         </Button>
       </div>
     </div>
