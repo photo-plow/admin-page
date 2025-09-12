@@ -167,6 +167,7 @@ export default function ListUsers() {
                         isUser={true}
                         onCloseMenu={() => setActiveUserId(null)}
                         setIsModalOpen={setIsModalOpen}
+                        userId={el.id}
                       />
                     </div>
                   )}
