@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client'
-import { SortBy } from '@/lib/types/graphql'
 
 const GET_FOLLOWERS_BY_USER = gql`
   query getFollowers(
