@@ -2,7 +2,7 @@ import React from 'react'
 
 import { twMerge } from 'tailwind-merge'
 import { useMutation } from '@apollo/client'
-import { REMOVE_USER, UNBAN_USER } from '@/lib/feature/usersList/api/getUsers'
+import { UNBAN_USER } from '@/lib/feature/usersList/api/getUsers'
 import { Button, ModalWindow, Typography } from 'photo-flow-ui-kit'
 
 type PostActionsModalProps = {
