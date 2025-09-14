@@ -4,14 +4,17 @@ import AccountRemove from '@/assets/icons/accountRemove.svg'
 import BanIcon from '@/assets/icons/ban.svg'
 import Dots from '@/assets/icons/more-horizontal.svg'
 import { Button, Typography } from 'photo-flow-ui-kit'
+import Link from 'next/link'
 
 type PostMenuProps = {
   onCloseMenu: () => void
   isUser?: boolean
   openDeleteModal: () => void
   openBanModal: () => void
+  userId: string
 }
 
+function UserMenu({ onCloseMenu, openDeleteModal, userId }: PostMenuProps) {
 function UserMenu({ onCloseMenu, openDeleteModal, openBanModal }: PostMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
   return (
@@ -44,17 +47,11 @@ function UserMenu({ onCloseMenu, openDeleteModal, openBanModal }: PostMenuProps)
             Ban in the system
           </Typography>
         </Button>
-        <Button
-          className={'mb-3 p-0'}
-          onClick={() => {
-            alert(`Is isn't your post!`)
-          }}
-          variant={'text'}
-        >
+        <Button className={'mb-3 p-0'} variant={'text'}>
           <Dots className={'fill-light-100 mr-3 h-6 w-5'} />
-          <Typography className={'text-light-100'} variant={'regular_text_14'}>
+          <Link href={`/usersList/${userId}`} className={'text-light-100 text-regular-14'}>
             More Information
-          </Typography>
+          </Link>
         </Button>
       </div>
     </div>

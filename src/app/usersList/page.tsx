@@ -168,6 +168,7 @@ export default function ListUsers() {
                   {activeUserId === el.id && (
                     <div className='absolute top-10 right-6 z-50'>
                       <UserMenu
+                        userId={el.id}
                         isUser={true}
                         onCloseMenu={() => setActiveUserId(null)}
                         openDeleteModal={() => {
