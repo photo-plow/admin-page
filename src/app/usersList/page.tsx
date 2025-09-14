@@ -14,6 +14,7 @@ import { Loader, Pagination } from 'photo-flow-ui-kit'
 import { formatDateToDotFormat } from '@/utils'
 import { MenuConfig } from '@/lib/feature/usersList/ui/MenuConfig'
 import ConfirmModal from '@/lib/feature/usersList/ui/removeUser/ConfirmModal'
+import UnBanUser from '@/lib/feature/usersList/ui/unBanUser/UnBanUser'
 
 type Header = {
   title: string
@@ -32,6 +33,7 @@ export default function ListUsers() {
   const [pageNumber, setPageNumber] = useState(1)
   const pageSize = 8
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isUnbanModalOpen, setUnbanIsModalOpen] = useState(false)
   const [activeUserId, setActiveUserId] = useState<number | string | null>(null)
   const [filteredValue, setFilteredValue] = useState<'All' | 'Blocked' | 'Not Blocked'>('All')
   const [search, setSearch] = useState('')
@@ -172,6 +174,10 @@ export default function ListUsers() {
                           setSelectedUserId(Number(el.id))
                           setIsModalOpen(true)
                         }}
+                        openUnBanModal={() => {
+                          setSelectedUserId(Number(el.id))
+                          setUnbanIsModalOpen(true)
+                        }}
                       />
                     </div>
                   )}
@@ -189,7 +195,6 @@ export default function ListUsers() {
           onChangePagination={handlePageChange}
         />
       </div>
-      {/*<ModalWindow open={isModalOpen} onClose={() => setIsModalOpen(false)} />*/}
       {
         <ConfirmModal
           open={isModalOpen}
@@ -198,6 +203,16 @@ export default function ListUsers() {
           userId={Number(selectedUserId)}
           type='delete'
           confirmText='Are you sure you want to delete this user?'
+        />
+      }
+      {
+        <UnBanUser
+          open={isUnbanModalOpen}
+          setIsModalOpen={setUnbanIsModalOpen}
+          onClose={() => setUnbanIsModalOpen(false)}
+          userId={Number(selectedUserId)}
+          type='unBan'
+          confirmText='Are you sure want to un-ban this user?'
         />
       }
     </div>
