@@ -23,6 +23,21 @@ export type GetPaymentsResponse = {
   totalCount: number
 }
 
+export type GetPaymentsByUser = {
+  items: Array<{
+    id: number
+    dateOfPayment: string
+    endDate: string
+    price: number
+    type: 'DAY' | 'WEEKLY' | 'MONTHLY'
+    paymentType: 'STRIPE' | 'PAYPAL' | 'CREDIT_CARD'
+  }>
+  pagesCount: number
+  page: number
+  pageSize: number
+  totalCount: number
+}
+
 export interface Profile {
   firstName: string
   lastName: string
@@ -66,6 +81,59 @@ export interface GetUsersVariables {
   statusFilter: string
   searchTerm: string | undefined
 }
+
 export interface RemoveUser {
   userId: number
+}
+
+export interface GetUser {
+  createdAt: string
+  profile: {
+    avatars: Array<{ url?: string }>
+    firstName?: string
+    lastName?: string
+  }
+  userName: string
+  id: number
+}
+
+export interface GetFollowersRequest {
+  userId: number
+  pageSize: number
+  pageNumber: number
+  sortDirection: SortDirection
+  sortBy: SortBy
+}
+
+export interface GetFollowers {
+  items: Follower[]
+  page: number
+  pageSize: number
+  pagesCount: number
+  totalCount: number
+}
+
+export interface Follower {
+  createdAt: string
+  firstName: string
+  id: number
+  lastName: string
+  userId: number
+  userName: string
+}
+
+export interface ImagePost {
+  createdAt: string
+  fileSize: number
+  height: number
+  id: number
+  url: string
+  width: number
+}
+
+export interface PostsByUserModel {
+  items: ImagePost[]
+  pageSize: number
+  pagesCount: number
+  totalCount: number
 }
