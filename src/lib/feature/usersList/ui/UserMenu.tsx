@@ -11,6 +11,7 @@ type PostMenuProps = {
   isUser?: boolean
   openDeleteModal: () => void
   openBanModal: () => void
+  openUnBanModal: () => void
   userId: string
 }
 

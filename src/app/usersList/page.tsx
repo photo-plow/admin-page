@@ -14,6 +14,7 @@ import { Loader, Pagination } from 'photo-flow-ui-kit'
 import { formatDateToDotFormat } from '@/utils'
 import { MenuConfig } from '@/lib/feature/usersList/ui/MenuConfig'
 import ConfirmModal from '@/lib/feature/usersList/ui/removeUser/ConfirmModal'
+import UnBanUser from '@/lib/feature/usersList/ui/unBanUser/UnBanUser'
 import BlockUser from '@/lib/feature/usersList/ui/blockUser/BlockUser'
 
 type Header = {
@@ -34,6 +35,7 @@ export default function ListUsers() {
   const pageSize = 8
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isBanModalOpen, setIsBanModalOpen] = useState(false)
+  const [isUnbanModalOpen, setUnbanIsModalOpen] = useState(false)
   const [activeUserId, setActiveUserId] = useState<number | string | null>(null)
   const [filteredValue, setFilteredValue] = useState<'All' | 'Blocked' | 'Not Blocked'>('All')
   const [search, setSearch] = useState('')
@@ -197,6 +199,7 @@ export default function ListUsers() {
           onChangePagination={handlePageChange}
         />
       </div>
+      {/*<ModalWindow open={isModalOpen} onClose={() => setIsModalOpen(false)} />*/}
       {
         <ConfirmModal
           open={isModalOpen}
@@ -219,6 +222,16 @@ export default function ListUsers() {
           />
         }
       </div>
+      {
+        <UnBanUser
+          open={isUnbanModalOpen}
+          setIsModalOpen={setUnbanIsModalOpen}
+          onClose={() => setUnbanIsModalOpen(false)}
+          userId={Number(selectedUserId)}
+          type='unBan'
+          confirmText='Are you sure want to un-ban this user?'
+        />
+      }
     </div>
   )
 }
