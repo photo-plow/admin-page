@@ -35,6 +35,12 @@ export interface UserBan {
   createdAt: string
 }
 
+enum UserBlockStatus {
+  ALL,
+  BLOCKED,
+  UNBLOCKED,
+}
+
 export interface UserType {
   id: string
   userName: string

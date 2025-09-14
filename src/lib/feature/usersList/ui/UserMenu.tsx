@@ -9,9 +9,10 @@ type PostMenuProps = {
   onCloseMenu: () => void
   isUser?: boolean
   openDeleteModal: () => void
+  openBanModal: () => void
 }
 
-function UserMenu({ onCloseMenu, openDeleteModal }: PostMenuProps) {
+function UserMenu({ onCloseMenu, openDeleteModal, openBanModal }: PostMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
   return (
     <div
@@ -33,7 +34,8 @@ function UserMenu({ onCloseMenu, openDeleteModal }: PostMenuProps) {
         <Button
           className={'mb-3 p-0'}
           onClick={() => {
-            alert(`Is isn't your user!`)
+            onCloseMenu()
+            openBanModal()
           }}
           variant={'text'}
         >

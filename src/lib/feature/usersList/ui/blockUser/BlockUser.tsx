@@ -1,0 +1,98 @@
+import React, { useEffect, useRef, useState } from 'react'
+
+import { twMerge } from 'tailwind-merge'
+import { useMutation } from '@apollo/client'
+import { BAN_USER } from '@/lib/feature/usersList/api/getUsers'
+import { Button, ModalWindow, Select, Typography } from 'photo-flow-ui-kit'
+
+type PostActionsModalProps = {
+  open: boolean
+  onClose: () => void
+  removeEditMode?: () => void
+  setIsModalOpen: (isModalOpen: boolean) => void
+  userId: number
+  type: 'block' | 'exit'
+  className?: string
+  confirmText: string
+}
+type ReasonType = 'Bad behavior' | 'Advertising placement' | 'Another reason'
+function BlockUser({
+  open,
+  onClose,
+  userId,
+  setIsModalOpen,
+  type,
+  className,
+  confirmText,
+}: PostActionsModalProps) {
+  const [blockUser] = useMutation(BAN_USER, {
+    refetchQueries: ['GetUsers'],
+  })
+  const [valBlock, setValBlock] = useState<ReasonType>('Another reason')
+  const reason = [
+    { title: 'Bad behavior' },
+    { title: 'Advertising placement' },
+    { title: 'Another reason' },
+  ]
+
+  const blockUserHandler = async () => {
+    setIsModalOpen(true)
+    try {
+      await blockUser({
+        variables: { userId, reason: valBlock },
+      })
+    } catch (error) {
+      console.error('The user blocking has not been found', error)
+    } finally {
+      setIsModalOpen(false)
+    }
+  }
+
+  return (
+    <ModalWindow
+      modalTitle={type === 'block' ? 'Ban user' : ''}
+      open={open}
+      className={twMerge('z-100 h-[288px] w-[400px]', className)}
+      onClose={onClose}
+    >
+      <div className='relative mt-7.5 px-6'>
+        <div className='pb-[18px]'>
+          <Typography variant='regular_text_16'>
+            Are you sure to ban this user, <strong>{confirmText}</strong>?
+          </Typography>
+        </div>
+        <div className={'pb-[48px]'}>
+          <Select
+            placeholder={'Reason for ban'}
+            items={reason}
+            value={valBlock}
+            onValueChange={setValBlock}
+            className={'bg-dark-500 w-full'}
+          />
+        </div>
+        <div className='flex justify-end gap-6'>
+          <Button
+            variant={'outline'}
+            onClick={() => {
+              if (type === 'exit') {
+                onClose()
+              }
+
+              if (type === 'block') {
+                blockUserHandler()
+              }
+            }}
+            className='w-24'
+          >
+            Yes
+          </Button>
+          <Button onClick={onClose} className='w-24'>
+            No
+          </Button>
+        </div>
+      </div>
+    </ModalWindow>
+  )
+}
+
+export default BlockUser

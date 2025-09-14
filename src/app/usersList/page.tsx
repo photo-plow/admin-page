@@ -14,6 +14,7 @@ import { Loader, Pagination } from 'photo-flow-ui-kit'
 import { formatDateToDotFormat } from '@/utils'
 import { MenuConfig } from '@/lib/feature/usersList/ui/MenuConfig'
 import ConfirmModal from '@/lib/feature/usersList/ui/removeUser/ConfirmModal'
+import BlockUser from '@/lib/feature/usersList/ui/blockUser/BlockUser'
 
 type Header = {
   title: string
@@ -32,6 +33,7 @@ export default function ListUsers() {
   const [pageNumber, setPageNumber] = useState(1)
   const pageSize = 8
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isBanModalOpen, setIsBanModalOpen] = useState(false)
   const [activeUserId, setActiveUserId] = useState<number | string | null>(null)
   const [filteredValue, setFilteredValue] = useState<'All' | 'Blocked' | 'Not Blocked'>('All')
   const [search, setSearch] = useState('')
@@ -39,6 +41,7 @@ export default function ListUsers() {
   const [sortBy, setSortBy] = useState<SortBy>('createdAt')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null)
+  const [profile, setProfile] = useState<string>('')
 
   const statusFilter =
     filteredValue === 'Blocked' ? 'BLOCKED' : filteredValue === 'Not Blocked' ? 'UNBLOCKED' : 'ALL'
@@ -171,6 +174,11 @@ export default function ListUsers() {
                           setSelectedUserId(Number(el.id))
                           setIsModalOpen(true)
                         }}
+                        openBanModal={() => {
+                          setProfile(el.userName)
+                          setSelectedUserId(Number(el.id))
+                          setIsBanModalOpen(true)
+                        }}
                       />
                     </div>
                   )}
@@ -188,7 +196,6 @@ export default function ListUsers() {
           onChangePagination={handlePageChange}
         />
       </div>
-      {/*<ModalWindow open={isModalOpen} onClose={() => setIsModalOpen(false)} />*/}
       {
         <ConfirmModal
           open={isModalOpen}
@@ -199,6 +206,18 @@ export default function ListUsers() {
           confirmText='Are you sure you want to delete this user?'
         />
       }
+      <div>
+        {
+          <BlockUser
+            open={isBanModalOpen}
+            setIsModalOpen={setIsBanModalOpen}
+            onClose={() => setIsBanModalOpen(false)}
+            userId={Number(selectedUserId)}
+            type='block'
+            confirmText={profile}
+          />
+        }
+      </div>
     </div>
   )
 }
