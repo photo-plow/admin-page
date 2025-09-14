@@ -52,7 +52,7 @@ export default function PaymentsByUser({ userId }: { userId: number }) {
   return (
     <div>
       <table className={twMerge('border-dark-500 w-[972px] border', styles['table-fixed-height'])}>
-        <thead className='bg-dark-500 h-[47px]'>
+        <thead className='bg-dark-500 h-[48px]'>
           <tr className='text-medium-14 text-left [&>*]:pl-[24px]'>
             {tableHeaders.map((title, index) => (
               <th key={index + title}>

@@ -57,12 +57,7 @@ export default function FollowersTable({
 
   return (
     <>
-      <table
-        className={twMerge(
-          'border-dark-500 mt-[36px] w-[972px] border',
-          styles['table-fixed-height']
-        )}
-      >
+      <table className={twMerge('border-dark-500 w-[972px] border', styles['table-fixed-height'])}>
         <thead className='bg-dark-500 h-[48px]'>
           <tr className='text-medium-14 text-left [&>*]:pl-[24px]'>
             {tableHeaders.map((header, index) => (
@@ -103,7 +98,7 @@ export default function FollowersTable({
           {normalizedData?.map(e => (
             <tr
               key={e.id}
-              className='text-regular-14 border-dark-500 h-[59px] border [&>*]:pl-[24px]'
+              className='text-regular-14 border-dark-500 h-[47px] border [&>*]:pl-[24px]'
             >
               <td>{e.userId}</td>
               <td className='underline'>{e.userName}</td>
