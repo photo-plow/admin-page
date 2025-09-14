@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import s from './s.module.css'
 import { twMerge } from 'tailwind-merge'
 import { useMutation } from '@apollo/client'
