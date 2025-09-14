@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-
+import s from './s.module.css'
 import { twMerge } from 'tailwind-merge'
 import { useMutation } from '@apollo/client'
 import { BAN_USER } from '@/lib/feature/usersList/api/getUsers'
@@ -39,7 +39,7 @@ function BlockUser({
     setIsModalOpen(true)
     try {
       await blockUser({
-        variables: { userId, reason: valBlock },
+        variables: { userId, banReason: valBlock },
       })
     } catch (error) {
       console.error('The user blocking has not been found', error)
@@ -55,22 +55,22 @@ function BlockUser({
       className={twMerge('h-[288px] w-[378px]', className)}
       onClose={onClose}
     >
-      <div className='relative mt-7.5 px-6'>
+      <div className='mt-7.5 px-6'>
         <div className='pb-[18px]'>
           <Typography variant='regular_text_16'>
             Are you sure to ban this user, <strong>{confirmText}</strong>?
           </Typography>
         </div>
-        <div className={'pb-[48px]'}>
+        <div className={''}>
           <Select
             placeholder={'Reason for ban'}
             items={reason}
             value={valBlock}
             onValueChange={setValBlock}
-            className={'bg-dark-500 w-full cursor-pointer'}
+            className={twMerge(s.select, 'bg-dark-100 w-full cursor-pointer')}
           />
         </div>
-        <div className='flex justify-end gap-6'>
+        <div className='absolute bottom-[36px] flex w-full gap-[70px]'>
           <Button
             variant={'outline'}
             onClick={() => {
@@ -82,11 +82,11 @@ function BlockUser({
                 blockUserHandler()
               }
             }}
-            className='w-24'
+            className='h-[36px] w-[130px]'
           >
             Yes
           </Button>
-          <Button onClick={onClose} className='w-24'>
+          <Button onClick={onClose} className='h-[36px] w-[130px]'>
             No
           </Button>
         </div>
