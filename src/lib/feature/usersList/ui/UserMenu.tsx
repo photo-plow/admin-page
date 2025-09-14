@@ -14,8 +14,7 @@ type PostMenuProps = {
   userId: string
 }
 
-function UserMenu({ onCloseMenu, openDeleteModal, userId }: PostMenuProps) {
-function UserMenu({ onCloseMenu, openDeleteModal, openBanModal }: PostMenuProps) {
+function UserMenu({ onCloseMenu, openDeleteModal, openBanModal, userId }: PostMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
   return (
     <div

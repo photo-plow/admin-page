@@ -52,7 +52,7 @@ function BlockUser({
     <ModalWindow
       modalTitle={type === 'block' ? 'Ban user' : ''}
       open={open}
-      className={twMerge('z-100 h-[288px] w-[400px]', className)}
+      className={twMerge('h-[288px] w-[378px]', className)}
       onClose={onClose}
     >
       <div className='relative mt-7.5 px-6'>
@@ -67,7 +67,7 @@ function BlockUser({
             items={reason}
             value={valBlock}
             onValueChange={setValBlock}
-            className={'bg-dark-500 w-full'}
+            className={'bg-dark-500 w-full cursor-pointer'}
           />
         </div>
         <div className='flex justify-end gap-6'>
