@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 
 import AccountRemove from '@/assets/icons/accountRemove.svg'
 import BanIcon from '@/assets/icons/ban.svg'
+import UnBanIcon from '@/assets/icons/unBan.svg'
 import Dots from '@/assets/icons/more-horizontal.svg'
 import { Button, Typography } from 'photo-flow-ui-kit'
 import Link from 'next/link'
@@ -13,9 +14,17 @@ type PostMenuProps = {
   openBanModal: () => void
   openUnBanModal: () => void
   userId: string
+  userStatus: boolean
 }
 
-function UserMenu({ onCloseMenu, openDeleteModal, openBanModal, userId }: PostMenuProps) {
+function UserMenu({
+  onCloseMenu,
+  openDeleteModal,
+  openBanModal,
+  userId,
+  openUnBanModal,
+  userStatus,
+}: PostMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
   return (
     <div
@@ -34,19 +43,36 @@ function UserMenu({ onCloseMenu, openDeleteModal, openBanModal, userId }: PostMe
           <AccountRemove className='mr-3 h-5 w-5' />
           <Typography variant='regular_text_14'>Delete User</Typography>
         </Button>
-        <Button
-          className={'mb-3 p-0'}
-          onClick={() => {
-            onCloseMenu()
-            openBanModal()
-          }}
-          variant={'text'}
-        >
-          <BanIcon className={'fill-light-100 mr-3 h-6 w-5'} />
-          <Typography className={'text-light-100'} variant={'regular_text_14'}>
-            Ban in the system
-          </Typography>
-        </Button>
+        {!userStatus && (
+          <Button
+            className={'mb-3 p-0'}
+            onClick={() => {
+              onCloseMenu()
+              openBanModal()
+            }}
+            variant={'text'}
+          >
+            <BanIcon className={'fill-light-100 mr-3 h-6 w-5'} />
+            <Typography className={'text-light-100'} variant={'regular_text_14'}>
+              Ban in the system
+            </Typography>
+          </Button>
+        )}
+        {userStatus && (
+          <Button
+            className={'mb-3 p-0'}
+            onClick={() => {
+              onCloseMenu()
+              openUnBanModal()
+            }}
+            variant={'text'}
+          >
+            <UnBanIcon className={'fill-light-100 mr-3 h-6 w-5'} />
+            <Typography className={'text-light-100'} variant={'regular_text_14'}>
+              Un-ban User
+            </Typography>
+          </Button>
+        )}
         <Button className={'mb-3 p-0'} variant={'text'}>
           <Dots className={'fill-light-100 mr-3 h-6 w-5'} />
           <Link href={`/usersList/${userId}`} className={'text-light-100 text-regular-14'}>

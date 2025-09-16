@@ -50,7 +50,7 @@ export interface UserBan {
   createdAt: string
 }
 
-enum UserBlockStatus {
+export enum UserBlockStatus {
   ALL,
   BLOCKED,
   UNBLOCKED,

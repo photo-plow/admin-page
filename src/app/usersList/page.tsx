@@ -47,7 +47,7 @@ export default function ListUsers() {
 
   const statusFilter =
     filteredValue === 'Blocked' ? 'BLOCKED' : filteredValue === 'Not Blocked' ? 'UNBLOCKED' : 'ALL'
-
+  console.log(filteredValue)
   const { data, loading, error } = useQuery<GetUsersResponse, GetUsersVariables>(GET_USERS, {
     variables: {
       pageSize,
@@ -172,6 +172,7 @@ export default function ListUsers() {
                       <UserMenu
                         userId={el.id}
                         isUser={true}
+                        userStatus={!!el.userBan}
                         onCloseMenu={() => setActiveUserId(null)}
                         openDeleteModal={() => {
                           setSelectedUserId(Number(el.id))
@@ -181,6 +182,10 @@ export default function ListUsers() {
                           setProfile(el.userName)
                           setSelectedUserId(Number(el.id))
                           setIsBanModalOpen(true)
+                        }}
+                        openUnBanModal={() => {
+                          setSelectedUserId(Number(el.id))
+                          setUnbanIsModalOpen(true)
                         }}
                       />
                     </div>

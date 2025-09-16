@@ -36,7 +36,6 @@ function UnBanUser({
       await unbanUser({
         variables: { userId },
       })
-      console.log(`user, ${userId} ictroot70 разбанен`)
     } catch (error) {
       console.error('The user has not been found', error)
     } finally {
