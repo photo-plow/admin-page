@@ -3,7 +3,7 @@ import s from './s.module.css'
 import { twMerge } from 'tailwind-merge'
 import { useMutation } from '@apollo/client'
 import { BAN_USER } from '@/lib/feature/usersList/api/getUsers'
-import { Button, ModalWindow, Select, Typography } from 'photo-flow-ui-kit'
+import { Button, ModalWindow, Select, Textarea, Typography } from 'photo-flow-ui-kit'
 
 type PostActionsModalProps = {
   open: boolean
@@ -28,18 +28,22 @@ function BlockUser({
   const [blockUser] = useMutation(BAN_USER, {
     refetchQueries: ['GetUsers'],
   })
-  const [valBlock, setValBlock] = useState<ReasonType>('Another reason')
+  const [valBlock, setValBlock] = useState<ReasonType>('Bad behavior')
+  const [customReason, setCustomReason] = useState('')
   const reason = [
     { title: 'Bad behavior' },
     { title: 'Advertising placement' },
     { title: 'Another reason' },
   ]
 
+  const requiresCustomReason = valBlock === 'Another reason'
+
   const blockUserHandler = async () => {
     setIsModalOpen(true)
     try {
+      const finalReason = requiresCustomReason && customReason ? customReason : valBlock
       await blockUser({
-        variables: { userId, banReason: valBlock },
+        variables: { userId, banReason: finalReason },
       })
     } catch (error) {
       console.error('The user blocking has not been found', error)
@@ -52,7 +56,7 @@ function BlockUser({
     <ModalWindow
       modalTitle={type === 'block' ? 'Ban user' : ''}
       open={open}
-      className={twMerge('h-[288px] w-[378px]', className)}
+      className={twMerge('h-[320px] w-[378px]', className)}
       onClose={onClose}
     >
       <div className='mt-7.5 px-6'>
@@ -61,7 +65,7 @@ function BlockUser({
             Are you sure to ban this user, <strong>{confirmText}</strong>?
           </Typography>
         </div>
-        <div className={''}>
+        <div>
           <Select
             placeholder={'Reason for ban'}
             items={reason}
@@ -69,8 +73,18 @@ function BlockUser({
             onValueChange={setValBlock}
             className={twMerge(s.select, 'bg-dark-100 w-full cursor-pointer')}
           />
+
+          {requiresCustomReason && (
+            <Textarea
+              className={'mt-1 mb-6 w-[327px] resize-none'}
+              placeholder={'Please specify the reason...'}
+              value={customReason}
+              onChange={e => setCustomReason(e.target.value)}
+              rows={1}
+            />
+          )}
         </div>
-        <div className='absolute bottom-[36px] flex w-full gap-[70px]'>
+        <div className='absolute bottom-[30px] flex w-full gap-[68px]'>
           <Button
             variant={'outline'}
             onClick={() => {
