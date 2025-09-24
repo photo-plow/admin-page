@@ -9,6 +9,7 @@ import { ImagePost } from '@/lib/types/graphql'
 import { timeAgo } from '@/utils'
 import { twMerge } from 'tailwind-merge'
 import PostGallery from '@/lib/feature/postsList/ui/postGallery/PostGallery'
+import BlockUser from '@/lib/feature/usersList/ui/blockUser/BlockUser'
 
 type Props = {
   ref: RefObject<HTMLDivElement | null> | null
@@ -32,6 +33,7 @@ export default function Post({
   userId,
 }: Props) {
   const [showMore, setShowMore] = useState(false)
+  const [isBanModalOpen, setIsBanModalOpen] = useState(false)
 
   return (
     <div className='relative h-[391px] w-[234px]' ref={ref}>
@@ -52,7 +54,7 @@ export default function Post({
           </Typography>
           <Ban
             className='absolute right-[0px] h-[24px] w-[24px]'
-            onClick={() => console.log(userId)}
+            onClick={() => setIsBanModalOpen(true)}
           />
         </div>
         <Typography variant='small_text' className='text-light-900 mt-[12px]'>
@@ -93,6 +95,14 @@ export default function Post({
           )}
         </Typography>
       </div>
+      <BlockUser
+        open={isBanModalOpen}
+        setIsModalOpen={setIsBanModalOpen}
+        onClose={() => setIsBanModalOpen(false)}
+        userId={userId}
+        type='block'
+        confirmText={`Are you sure to ban this user, ${username}?`}
+      />
     </div>
   )
 }

@@ -1,13 +1,15 @@
 'use client'
 
-import { useQuery } from '@apollo/client'
+import { useApolloClient, useQuery, useSubscription } from '@apollo/client'
 import { GET_POSTS_LIST } from '@/lib/feature/postsList/api/getPostsList'
 import { Input, Loader } from 'photo-flow-ui-kit'
-import { PostsPaginationModel } from '@/lib/types/graphql'
+import { PostResponse, PostsPaginationModel } from '@/lib/types/graphql'
 import Post from '@/lib/feature/postsList/ui/post/Post'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { POST_ADDED } from '@/lib/feature/postsList/api/postAdded'
 
 export default function PostsList() {
+  const client = useApolloClient()
   const lastDivRef = useRef<HTMLDivElement>(null)
   const [searchValue, setSearchValue] = useState('')
 
@@ -22,6 +24,27 @@ export default function PostsList() {
       },
     }
   )
+
+  useSubscription(POST_ADDED, {
+    onData: ({ data: subscriptionData }) => {
+      const newPost = subscriptionData?.data?.postAdded
+      console.log(newPost)
+      if (!newPost) return
+      client.cache.modify({
+        fields: {
+          getPosts(existingPosts = { items: [] }) {
+            const newItems = existingPosts.items.filter(
+              (post: PostResponse) => post.id !== newPost.id
+            )
+            return {
+              ...existingPosts,
+              items: [newPost, ...newItems],
+            }
+          },
+        },
+      })
+    },
+  })
 
   useEffect(() => {
     setTimeout(async () => await refetch(), 300)

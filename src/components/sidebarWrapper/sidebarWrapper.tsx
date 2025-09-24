@@ -25,7 +25,7 @@ const mainMenuItems = [
   },
   {
     title: 'Posts list',
-    url: 'postsList',
+    url: '/postsList',
     icon: postsList,
   },
 ]

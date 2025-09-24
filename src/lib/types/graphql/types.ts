@@ -144,7 +144,7 @@ export interface PostsByUserModel {
   totalCount: number
 }
 
-type Post = {
+export type PostResponse = {
   createdAt: string
   description: string
   id: number
@@ -171,7 +171,7 @@ type PostOwnerModel = {
 }
 
 export interface PostsPaginationModel {
-  items: Post[]
+  items: PostResponse[]
   pageSize: number
   pagesCount: number
   totalCount: number
