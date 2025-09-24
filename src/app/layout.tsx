@@ -15,7 +15,23 @@ const httpLink = createHttpLink({
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          getPosts: {
+            keyArgs: false,
+            merge(existing = { items: [] }, incoming) {
+              return {
+                ...incoming,
+                items: [...existing.items, ...incoming.items],
+              }
+            },
+          },
+        },
+      },
+    },
+  }),
   defaultOptions: { query: { fetchPolicy: 'network-only' } },
 })
 

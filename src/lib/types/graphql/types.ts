@@ -143,3 +143,36 @@ export interface PostsByUserModel {
   pagesCount: number
   totalCount: number
 }
+
+type Post = {
+  createdAt: string
+  description: string
+  id: number
+  images: ImagePost[]
+  ownerId: number
+  postOwner: PostOwnerModel
+  updatedAt: string
+  userBan: UserBan
+}
+
+type Avatar = {
+  fileSize: number
+  height: number
+  url: string
+  width: number
+}
+
+type PostOwnerModel = {
+  avatars: Avatar[]
+  firstName: string
+  id: number
+  lastName: string
+  userName: string
+}
+
+export interface PostsPaginationModel {
+  items: Post[]
+  pageSize: number
+  pagesCount: number
+  totalCount: number
+}
