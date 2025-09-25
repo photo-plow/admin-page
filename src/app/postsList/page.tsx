@@ -28,7 +28,6 @@ export default function PostsList() {
   useSubscription(POST_ADDED, {
     onData: ({ data: subscriptionData }) => {
       const newPost = subscriptionData?.data?.postAdded
-      console.log(newPost)
       if (!newPost) return
       client.cache.modify({
         fields: {
